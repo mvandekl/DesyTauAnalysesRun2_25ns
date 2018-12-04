@@ -642,8 +642,8 @@ int main(int argc, char * argv[]){
     std::cout << "      number of entries in Tree = " << numberOfEntries << std::endl;
     ///////////////EVENT LOOP///////////////
     
-//for (Long64_t iEntry=0; iEntry<1000; iEntry++) {
- for (Long64_t iEntry=0; iEntry<numberOfEntries; iEntry++) {       
+for (Long64_t iEntry=0; iEntry<1000; iEntry++) {
+// for (Long64_t iEntry=0; iEntry<numberOfEntries; iEntry++) {       
       counter[0]++;
       analysisTree.GetEntry(iEntry);
       nEvents++;
