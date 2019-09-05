@@ -150,9 +150,7 @@
 #include "DataFormats/L1Trigger/interface/Tau.h"
 #include "DataFormats/L1Trigger/interface/Jet.h"
 
-//Merijn add few includes for Helix parameter calculations
-#include "DataFormats/TrackReco/interface/TrackBase.h" //Merijn included for track parameters for helix calculations
-#include "DataFormats/VertexReco/interface/Vertex.h" //Merijn included, needed for PV covar for helix calculations
+// #include "DataFormats/TrackReco/interface/TrackBase.h" //Merijn included for track parameters
 
 #include "SimDataFormats/HTXS/interface/HiggsTemplateCrossSections.h"
 
@@ -594,12 +592,10 @@ class NTupleMaker : public edm::EDAnalyzer{
 
   // pat muons
   UInt_t muon_count;
-  //Merijn: add some helix parameter container:
-  Float_t muon_helixparameters[M_muonmaxcount][5];
-  Float_t muon_helixparameters_covar[M_muonmaxcount][5][5];
+
+//Merijn add:
   Float_t muon_referencePoint[M_muonmaxcount][3];
-  Float_t muon_Bfield[M_muonmaxcount];
-  Float_t muon_Bfield2[M_muonmaxcount];
+  Float_t tau_SV_cov2[M_taumaxcount][6];
 
   Float_t muon_px[M_muonmaxcount];
   Float_t muon_py[M_muonmaxcount];
@@ -863,13 +859,6 @@ class NTupleMaker : public edm::EDAnalyzer{
 
   // taus
   UInt_t tau_count;
-  //Merijn: add some helix parameter container:
-  Float_t tau_helixparameters[M_taumaxcount][5];
-  Float_t tau_helixparameters_covar[M_taumaxcount][5][5];
-  Float_t tau_referencePoint[M_taumaxcount][3];
-  Float_t tau_Bfield[M_muonmaxcount];
-
-
   Float_t tau_e[M_taumaxcount];
   Float_t tau_px[M_taumaxcount];
   Float_t tau_py[M_taumaxcount];
@@ -912,7 +901,8 @@ class NTupleMaker : public edm::EDAnalyzer{
   Float_t tau_SV_y[M_taumaxcount];
   Float_t tau_SV_z[M_taumaxcount];
   Float_t tau_SV_cov[M_taumaxcount][6];
-  Float_t tau_SV_cov2[M_taumaxcount][3];
+
+//  Float_t tau_SV_cov2[M_taumaxcount][6];
 
   Float_t tau_charge[M_taumaxcount];
   Float_t tau_genjet_e[M_taumaxcount];
@@ -1354,3 +1344,4 @@ class NTupleMaker : public edm::EDAnalyzer{
 DEFINE_FWK_MODULE(NTupleMaker);
 
 #endif
+
