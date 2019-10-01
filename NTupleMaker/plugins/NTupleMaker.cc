@@ -148,6 +148,11 @@ NTupleMaker::NTupleMaker(const edm::ParameterSet& iConfig) :
   cMuEtaMax(iConfig.getUntrackedParameter<double>("RecMuonEtaMax", 2.5)),
   cMuHLTriggerMatching(iConfig.getUntrackedParameter<vector<string> >("RecMuonHLTriggerMatching")),
   cMuNum(iConfig.getUntrackedParameter<int>("RecMuonNum", 0)),
+
+  //Merijn: tauspinnor
+  ctauspinreweighing(iConfig.getUntrackedParameter<bool>("tauspinreweighing", false)),
+  ctauspinreweighingCPAngles(iConfig.getUntrackedParameter<vector<string> >("tauspinreweighingCPAngles")),
+
   // electrons
   cElPtMin(iConfig.getUntrackedParameter<double>("RecElectronPtMin", 10.)),
   cElEtaMax(iConfig.getUntrackedParameter<double>("RecElectronEtaMax", 2.5)),

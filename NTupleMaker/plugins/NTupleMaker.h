@@ -149,11 +149,28 @@
 #include "DataFormats/L1Trigger/interface/EGamma.h"
 #include "DataFormats/L1Trigger/interface/Tau.h"
 #include "DataFormats/L1Trigger/interface/Jet.h"
-
+fv
 //includes for Helix parameter calculations
 #include "DataFormats/TrackReco/interface/TrackBase.h"
 
 #include "SimDataFormats/HTXS/interface/HiggsTemplateCrossSections.h"
+
+//include for tauspinnor:
+#include "GeneratorInterface/TauolaInterface/interface/TauSpinnerCMS.h"
+#include "boost/functional/hash.hpp"
+#include "FWCore/Framework/interface/EDProducer.h"
+#include "DataFormats/HepMCCandidate/interface/GenStatusFlags.h"
+
+//#include "TauSpinner/SimpleParticle.h"
+#include "TauSpinner/tau_reweight_lib.h"
+
+#include "GeneratorInterface/TauolaInterface/interface/TauSpinnerCMS.h"
+
+//MC-TESTER header files
+#include "Tauola/Tauola.h"
+#include "TauSpinner/tau_reweight_lib.h"
+#include "TauSpinner/Tauola_wrapper.h"
+#include "GeneratorInterface/TauolaInterface/interface/read_particles_from_HepMC.h"
 
 using namespace std;
 using namespace reco;
@@ -369,6 +386,10 @@ class NTupleMaker : public edm::EDAnalyzer{
   double cMuEtaMax;
   vector<string> cMuHLTriggerMatching;
   int cMuNum;
+
+//Merijn add:
+  bool ctauspinreweighing;
+  vector<string> ctauspinreweighingCPAngles;
 
   double cElPtMin;
   double cElEtaMax;

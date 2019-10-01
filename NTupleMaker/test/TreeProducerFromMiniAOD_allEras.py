@@ -8,6 +8,15 @@ isRun2018D = False # needed for the correct Global Tag
 isHiggsSignal = False # Set to true if you run over higgs signal samples -> needed for STXS1p1 flags
 year = 2017
 period = '2017'
+
+#if we run on a Higgs signal sample with uncorrelated tau spin vectors, turn this on to apply reweighing to CP scenarios with CP mixing angles below as multitude of pi
+tauspinreweighing=True
+if tauspinreweighing:
+	tauspinreweighingGenParticles='prunedGenParticles'
+	tauspinreweighingCPAngles=cms.vstring("0,0.25,0.5,-0.25,0.375")
+#We may want to define these as well in case we don run over a sampe..
+	
+
 # ============================================================================================
 if isEmbedded : isData = True
 # ============================================================================================
@@ -49,7 +58,7 @@ process.options = cms.untracked.PSet(
 
 # How many events to process
 process.maxEvents = cms.untracked.PSet(
-   input = cms.untracked.int32(1000)
+   input = cms.untracked.int32(100)
 )
 
 # Define the input source
