@@ -16,6 +16,12 @@
 #include "TauSpinner/tau_reweight_lib.h"
 #include "DataFormats/HepMCCandidate/interface/GenStatusFlags.h"
 
+//Merijn add:
+#include "FWCore/ServiceRegistry/interface/Service.h"
+#include "CommonTools/UtilAlgos/interface/TFileService.h"
+#include "TTree.h"
+//#include "DesyTauAnalyses/NTupleMaker/plugins/NTupleMaker.h"
+
 enum pdgId {
   Gamma = 22,
   PiZero = 111,
@@ -67,6 +73,11 @@ class ICTauSpinnerProducer : public edm::EDProducer {
   int nonSM2;
   int nonSMN;
   double CMSENE;
+
+
+  //Merijn add:
+  TTree* tree;
+  TH1D*  nEvents;//for test purpose..
 };
 
 #endif

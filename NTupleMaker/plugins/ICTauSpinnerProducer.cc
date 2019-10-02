@@ -212,6 +212,8 @@ cout<<"running ICTauSpinnerProducer"<<endl;
     TauSpinner::setHiggsParametersTR(-cos(2*M_PI*theta_val_),cos(2*M_PI*theta_val_),-sin(2*M_PI*theta_val_),-sin(2*M_PI*theta_val_));
     double weight_ = TauSpinner::calculateWeightFromParticlesH(simple_boson,simple_tau1,simple_tau2,simple_tau1_daughters,simple_tau2_daughters); 
   //  info_->set_weight(weight_name_,weight_,false);
+    cout<<"weight_name "<<weight_name_ <<" weight "<<weight_ <<endl;
+	
   }
 
 }
@@ -220,6 +222,20 @@ void ICTauSpinnerProducer::beginJob() {
 //  ic::StaticTree::tree_->Branch(branch_.c_str(), &info_);
   theta_vec_ = SplitString(theta_);  
   initialize();  
+
+//Merijn: try to connect to our output file
+  edm::Service<TFileService> FS;
+  tree = FS->make<TTree>("KlundertTree", "KlundertTree", 1); //works, but goes in icTauSpinner directory..
+  tree->SetMaxVirtualSize(300000000);
+//  std::string ntupleName("makeroottree/AC1B"); this doesn work..
+//  tree = (TTree*)FS->Get(TString(ntupleName));
+
+//  NTupleMaker::treeKlundert->
+
+  nEvents = FS->make<TH1D>("nEvents", "nEvents", 2, -0.5, +1.5);
+
+  tree->Branch("bosonPdgIdTauSpinner_", &bosonPdgId_, "bosonPdgId_/I");
+
 }
 
 void ICTauSpinnerProducer::endJob() {}
