@@ -20,7 +20,7 @@
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "TTree.h"
-//#include "DesyTauAnalyses/NTupleMaker/plugins/NTupleMaker.h"
+//#include "DesyTauAnalyses/NTupleMaker/plugins/NTupleMaker.h" currently will generate an issue with multiple definitions 
 
 enum pdgId {
   Gamma = 22,
@@ -78,6 +78,10 @@ class ICTauSpinnerProducer : public edm::EDProducer {
   //Merijn add:
   TTree* tree;
   TH1D*  nEvents;//for test purpose..
+  int NThetaAngles;
+  double * WeightsPtr;
+
+
 };
 
 #endif

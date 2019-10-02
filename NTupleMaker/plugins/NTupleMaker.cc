@@ -57,6 +57,7 @@ typedef ROOT::Math::SVector<double, 3> SVector3; //// SVector: vector of size 3
 
 #include "DesyTauAnalyses/NTupleMaker/interface/genMatch.h"
 
+
 void NTupleMaker::computePCA(double * pv, double * refPoint, double * mom, double * pca) {
 
   double diff[3];
@@ -1655,7 +1656,7 @@ void NTupleMaker::endLuminosityBlock(const edm::LuminosityBlock& iLumiBlock, con
 
 void NTupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  if(doDebug)  cout<<"inside the analyze function"<< endl;
+  if(doDebugNTupler)  cout<<"inside the analyze function"<< endl;
 
   track_count = 0;
   goodprimvertex_count = 0;
@@ -1891,7 +1892,7 @@ void NTupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
       }
     }
   if (csusyinfo) {
-    if(doDebug)  cout<<"add SUSY info"<< endl;
+    if(doDebugNTupler)  cout<<"add SUSY info"<< endl;
     AddSusyInfo(iEvent);
     //    std::cout << "Run = " << event_run << "   Lumi = " << event_luminosityblock << "   Event = " << event_nr << std::endl;
     //    std::cout << "SUSY Mother Mass = " << SusyMotherMass << std::endl;
@@ -1902,19 +1903,19 @@ void NTupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
   if (crecmuon)
     {
-      if(doDebug)  cout<<"add muons"<< endl;
+      if(doDebugNTupler)  cout<<"add muons"<< endl;
       int numberOfMuons = int(AddMuons(iEvent, iSetup));
     } // crecmuon
 
   if (crecelectron)
     {
-      if(doDebug)  cout<<"add electrons"<< endl;
+      if(doDebugNTupler)  cout<<"add electrons"<< endl;
       int numberOfElectrons = int(AddElectrons(iEvent,iSetup));
     } // crecelectron
 
   if(crectau)
     {
-      if (doDebug) cout<<"add taus"<< endl;
+      if (doDebugNTupler) cout<<"add taus"<< endl;
       int numberOfTaus = int(AddTaus(iEvent, iSetup));
       // if (cSkim>0) {
       // 	bool goodTaus = false;
@@ -2101,7 +2102,7 @@ void NTupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   iEvent.getByToken( L1TauCollectionToken_, l1isotaus);
 
   if (cl1objects && l1muons.isValid() && l1egammas.isValid() && l1taus.isValid() && l1isotaus.isValid()){
-    if (doDebug) cout<<"add L1 Objects"<< endl;
+    if (doDebugNTupler) cout<<"add L1 Objects"<< endl;
 
     for(int ibx = l1muons->getFirstBX() ; ibx <= l1muons->getLastBX() ; ++ibx) {
       for(BXVector<l1t::Muon>::const_iterator it=l1muons->begin(ibx); it!=l1muons->end(ibx); it++) {
@@ -2239,7 +2240,7 @@ void NTupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
   if (crecpfjet)
     {
-      if(doDebug)  cout<<"add PF jets"<< endl;
+      if(doDebugNTupler)  cout<<"add PF jets"<< endl;
       int numberOfJets = int(AddPFJets(iEvent,iSetup));
       // if (cSkim) {
       // 	bool goodJets = false;
@@ -2258,14 +2259,14 @@ void NTupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
     if (crecpfpuppijet)
       {
-        if(doDebug)  cout<<"add PF Puppi jets"<< endl;
+        if(doDebugNTupler)  cout<<"add PF Puppi jets"<< endl;
         int numberOfJetsPuppi = int(AddPFPuppiJets(iEvent,iSetup));
       }
 
 
   if(crecpfmet)
     {
-      if(doDebug)  cout<<"add PF MET"<< endl;
+      if(doDebugNTupler)  cout<<"add PF MET"<< endl;
       edm::Handle<pat::METCollection> patMet;
       iEvent.getByToken(MetCollectionToken_, patMet);
 
@@ -2303,7 +2304,7 @@ void NTupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
   if(crecpfmetcorr)
     {
-      if(doDebug)  cout<<"add Corrected PF MET"<< endl;
+      if(doDebugNTupler)  cout<<"add Corrected PF MET"<< endl;
       edm::Handle<pat::METCollection> patMet;
       iEvent.getByToken(MetCorrCollectionToken_, patMet);
 
@@ -2366,7 +2367,7 @@ void NTupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
 
   if(crecpuppimet)
     {
-      if(doDebug)  cout<<"add Puppi MET"<< endl;
+      if(doDebugNTupler)  cout<<"add Puppi MET"<< endl;
       edm::Handle<pat::METCollection> patMet;
       iEvent.getByToken(PuppiMetCollectionToken_, patMet);
 
@@ -2401,7 +2402,7 @@ void NTupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
       puppimet_ey_JetResDown = (*patMet)[0].shiftedPy(pat::MET::METUncertainty::JetResDown,pat::MET::METCorrectionLevel::Type1);
     } // crecpuppimet
 
-  if(doDebug)  cout<<"add MVA MET"<< endl;
+  if(doDebugNTupler)  cout<<"add MVA MET"<< endl;
   if(crecmvamet)
     {
       for(std::vector<edm::InputTag>::iterator mit = MvaMetCollectionsTag_.begin();
@@ -2502,7 +2503,7 @@ void NTupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
       }
     }// crecmvamet
 
-  if(doDebug)  cout<<"add rho"<< endl;
+  if(doDebugNTupler)  cout<<"add rho"<< endl;
   // rho neutral
   edm::Handle<double> rho;
   iEvent.getByLabel(edm::InputTag("fixedGridRhoFastjetAll"), rho);
@@ -2523,7 +2524,7 @@ void NTupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
   genparticles_noutgoing_NLO = 0;
 
   // generator info and generated particles
-  if(doDebug)  cout<<"add gen info"<< endl;
+  if(doDebugNTupler)  cout<<"add gen info"<< endl;
   if(cembedded) {
     bool haveGenParticles = AddGenParticles(iEvent);
     edm::Handle<GenEventInfoProduct> GenEventInfo;
@@ -2576,7 +2577,7 @@ void NTupleMaker::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetu
     } // cgen
   if (ctrigger)
     {
-      if(doDebug)  cout<<"add trigger info"<< endl;
+      if(doDebugNTupler)  cout<<"add trigger info"<< endl;
       int numberOfTriggerObjects = int(AddTriggerObjects(iEvent,TriggerObjectCollectionToken_,*HLTrigger));
       //      std::cout << std::endl;
     } // ctrigger
@@ -3860,7 +3861,7 @@ unsigned int NTupleMaker::AddTriggerObjects(const edm::Event& iEvent,
 
 unsigned int NTupleMaker::AddTaus(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-  if(doDebug) cout<<"inside the AddTaus()"<< endl;
+  if(doDebugNTupler) cout<<"inside the AddTaus()"<< endl;
   edm::Handle<BXVector<l1t::Jet> > l1jetsHandle;
   const BXVector<l1t::Jet>* l1jets = 0;
 
@@ -3945,7 +3946,7 @@ unsigned int NTupleMaker::AddTaus(const edm::Event& iEvent, const edm::EventSetu
 	  if((*Taus)[i].tauID("decayModeFinding") < 0.5
 	     && (*Taus)[i].tauID("decayModeFindingNewDMs") < 0.5 ) continue; //remove this cut from here OR apply new DMF cuts
 
-	  if(doDebug) cout << "Skimmed events..."<< endl;
+	  if(doDebugNTupler) cout << "Skimmed events..."<< endl;
 
 //calculation for helix parameters for tau. First get PackedCandidate, from this get reco::Track.
 	pat::PackedCandidate const* packedLeadTauCand = dynamic_cast<pat::PackedCandidate const*>((*Taus)[i].leadChargedHadrCand().get());
@@ -4404,8 +4405,8 @@ LorentzVector NTupleMaker::GetRescaledTau(const pat::Tau& tau, double shift)
     }
   LorentzVector ShiftedTau( tau.px()*scale , tau.py()*scale, tau.pz()*scale, tau.energy()*(1+shift) );
 
-  if(doDebug)cout<<"scaled tau : "<< ShiftedTau.px() <<", "<< ShiftedTau.py()<< ", "<< ShiftedTau.pz()<<"," << ShiftedTau.E()<< endl;
-  if(doDebug) std::cout<<" Rescaling Pat::Tau of DecayMode "<<tau.decayMode()<<" by "<<shift<<"% ==> scale = "<<scale<<std::endl;
+  if(doDebugNTupler)cout<<"scaled tau : "<< ShiftedTau.px() <<", "<< ShiftedTau.py()<< ", "<< ShiftedTau.pz()<<"," << ShiftedTau.E()<< endl;
+  if(doDebugNTupler) std::cout<<" Rescaling Pat::Tau of DecayMode "<<tau.decayMode()<<" by "<<shift<<"% ==> scale = "<<scale<<std::endl;
 
   return ShiftedTau;
 }

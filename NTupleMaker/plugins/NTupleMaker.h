@@ -179,7 +179,8 @@ typedef ROOT::Math::PositionVector3D<ROOT::Math::Cartesian3D<double>,ROOT::Math:
 typedef ROOT::Math::LorentzVector<ROOT::Math::PxPyPzE4D<double> > LorentzVector;
 typedef ROOT::Math::SMatrix<double, 2, 2, ROOT::Math::MatRepSym<double, 2> > CovMatrix2D;
 
-bool doDebug = false;
+bool doDebugNTupler = false;
+
 class NTupleMaker : public edm::EDAnalyzer{
  public:
   explicit NTupleMaker( const edm::ParameterSet& iConfig );
@@ -266,6 +267,7 @@ class NTupleMaker : public edm::EDAnalyzer{
     return iso;
   }
 
+inline static TTree* treeKlundert = new TTree();
 
  private:
   enum MotherNames{HIGGS=1, WBOSON, ZBOSON, TAU};
@@ -320,7 +322,6 @@ class NTupleMaker : public edm::EDAnalyzer{
   TTree* lumitree;
   TTree* runtree;
   TH1D*  nEvents;
-//  static TTree* treeKlundert;
 
   //Configuration (steering cards)
 

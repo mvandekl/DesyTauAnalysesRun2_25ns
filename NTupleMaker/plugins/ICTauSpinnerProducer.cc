@@ -18,6 +18,8 @@
 #include "UserCode/ICHiggsTauTau/plugins/PrintConfigTools.h"
 */
 
+//#include "DesyTauAnalyses/NTupleMaker/plugins/NTupleMaker.h"
+
 ICTauSpinnerProducer::ICTauSpinnerProducer(const edm::ParameterSet& config)
     : input_(config.getParameter<edm::InputTag>("input")),
       branch_(config.getParameter<std::string>("branch")),
@@ -205,6 +207,8 @@ cout<<"running ICTauSpinnerProducer"<<endl;
   for(unsigned i=0; i<tau1_daughters.size(); ++i) simple_tau1_daughters.push_back(ConvertToSimplePart(tau1_daughters[i]));
   for(unsigned i=0; i<tau2_daughters.size(); ++i) simple_tau2_daughters.push_back(ConvertToSimplePart(tau2_daughters[i]));
  
+  WeightsPtr=new double[theta_vec_.size()];
+
   for(unsigned i=0; i<theta_vec_.size(); ++i){
     double theta_val_ = theta_vec_[i].second;
     std::string weight_name_ = theta_vec_[i].first;
@@ -213,9 +217,12 @@ cout<<"running ICTauSpinnerProducer"<<endl;
     double weight_ = TauSpinner::calculateWeightFromParticlesH(simple_boson,simple_tau1,simple_tau2,simple_tau1_daughters,simple_tau2_daughters); 
   //  info_->set_weight(weight_name_,weight_,false);
     cout<<"weight_name "<<weight_name_ <<" weight "<<weight_ <<endl;
-	
+    WeightsPtr[i]=weight_;	
   }
 
+
+
+ tree->Fill();
 }
 
 void ICTauSpinnerProducer::beginJob() {
@@ -227,14 +234,20 @@ void ICTauSpinnerProducer::beginJob() {
   edm::Service<TFileService> FS;
   tree = FS->make<TTree>("KlundertTree", "KlundertTree", 1); //works, but goes in icTauSpinner directory..
   tree->SetMaxVirtualSize(300000000);
+
+//playground Merijn
 //  std::string ntupleName("makeroottree/AC1B"); this doesn work..
 //  tree = (TTree*)FS->Get(TString(ntupleName));
+//  NTupleMaker::treeKlundert->Branch("bosonPdgIdTauSpinner_", &bosonPdgId_, "bosonPdgId_/I"); could be way more elegant..
+//  nEvents = FS->make<TH1D>("nEvents", "nEvents", 2, -0.5, +1.5);
+//  tree->Branch("muon_count", &muon_count, "muon_count/i");
+//  tree->Branch("muon_helixparameters", muon_helixparameters, "muon_helixparameters[muon_count][5]/F");
 
-//  NTupleMaker::treeKlundert->
+  NThetaAngles=theta_vec_.size();
+  tree->Branch("NThetaAngles", &NThetaAngles, "NThetaAngles/i");
+  tree->Branch("TauSpinnerParameters", WeightsPtr, "WeightsPtr[NThetaAngles]/D");
 
-  nEvents = FS->make<TH1D>("nEvents", "nEvents", 2, -0.5, +1.5);
-
-  tree->Branch("bosonPdgIdTauSpinner_", &bosonPdgId_, "bosonPdgId_/I");
+  //  tree->Branch("bosonPdgIdTauSpinner_", &bosonPdgId_, "bosonPdgId_/I");
 
 }
 
