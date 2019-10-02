@@ -49,7 +49,7 @@ process.options = cms.untracked.PSet(
 
 # How many events to process
 process.maxEvents = cms.untracked.PSet(
-   input = cms.untracked.int32(1000)
+   input = cms.untracked.int32(100)
 )
 
 # Define the input source
@@ -629,7 +629,15 @@ process.triggerSelection = cms.EDFilter("HLTHighLevel",
                                         )
 # END Trigger filtering =================================================================================
 
+#try add tauspinner:
+process.icTauSpinnerProducer = cms.EDProducer("ICTauSpinnerProducer",
+  branch                  = cms.string("tauspinner"),
+  input                   = cms.InputTag("prunedGenParticles"),
+  theta                   = cms.string("0,0.25,0.5,-0.25,0.375")
+)
 
+#process.icTauSpinnerSequence = cms.Sequence()
+process.icTauSpinnerSequence = cms.Sequence(process.icTauSpinnerProducer)
 
 process.p = cms.Path(
   process.triggerSelection * # trigger filtering
@@ -649,7 +657,9 @@ process.p = cms.Path(
   process.MiniAODRefitVertexBS * # PV with BS constraint
   process.htxsSequence * # HTXS
   process.prefiringweight * # prefiring-weights for 2016/2017
-  process.makeroottree
+  process.makeroottree *
+#Merijn add
+  process.icTauSpinnerSequence
 )
 
 if isData: filename_suffix = "DATA"
