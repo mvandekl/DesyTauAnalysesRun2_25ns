@@ -77,6 +77,7 @@ class ICTauSpinnerProducer : public edm::EDProducer {
 
   //Merijn add:
   TTree* tree;
+  TTree* treeAngles;//this we'll fill only once!
   TH1D*  nEvents;//for test purpose..
   int NThetaAngles;
   double * WeightsPtr;

@@ -228,11 +228,11 @@ cout<<"running ICTauSpinnerProducer"<<endl;
 void ICTauSpinnerProducer::beginJob() {
 //  ic::StaticTree::tree_->Branch(branch_.c_str(), &info_);
   theta_vec_ = SplitString(theta_);  
-  initialize();  
+  initialize();
 
 //Merijn: try to connect to our output file
   edm::Service<TFileService> FS;
-  tree = FS->make<TTree>("KlundertTree", "KlundertTree", 1); //works, but goes in icTauSpinner directory..
+  tree = FS->make<TTree>("TauSpinnerWeightTree","TauSpinnerWeightTree", 1); //works, but goes in icTauSpinner directory..
   tree->SetMaxVirtualSize(300000000);
 
 //playground Merijn
@@ -240,18 +240,32 @@ void ICTauSpinnerProducer::beginJob() {
 //  tree = (TTree*)FS->Get(TString(ntupleName));
 //  NTupleMaker::treeKlundert->Branch("bosonPdgIdTauSpinner_", &bosonPdgId_, "bosonPdgId_/I"); could be way more elegant..
 //  nEvents = FS->make<TH1D>("nEvents", "nEvents", 2, -0.5, +1.5);
-//  tree->Branch("muon_count", &muon_count, "muon_count/i");
-//  tree->Branch("muon_helixparameters", muon_helixparameters, "muon_helixparameters[muon_count][5]/F");
 
   NThetaAngles=theta_vec_.size();
   tree->Branch("NThetaAngles", &NThetaAngles, "NThetaAngles/i");
-  tree->Branch("TauSpinnerParameters", WeightsPtr, "WeightsPtr[NThetaAngles]/D");
+  tree->Branch("TauSpinnerWeights", WeightsPtr, "WeightsPtr[NThetaAngles]/D");
 
-  //  tree->Branch("bosonPdgIdTauSpinner_", &bosonPdgId_, "bosonPdgId_/I");
 
 }
 
-void ICTauSpinnerProducer::endJob() {}
+void ICTauSpinnerProducer::endJob(){
+  edm::Service<TFileService> FS;
+  //Merijn: use this function to ONCE store the angle names and values
+  treeAngles=FS->make<TTree>("TauSpinnerAngleTree", "TauSpinnerAngleTree", 1);
+  
+  double * AnglePtr =new double[NThetaAngles];	
+  std::vector<string> mystringso;
+
+  for(unsigned i=0; i<theta_vec_.size(); ++i){
+    AnglePtr[i] = theta_vec_[i].second;
+    mystringso.push_back(theta_vec_[i].first);    
+  }
+		
+  treeAngles->Branch("NThetaAngles", &NThetaAngles, "NThetaAngles/i"); //needed to set properly
+  treeAngles->Branch("TauSpinnerMixingAngles", AnglePtr, "AnglePtr[NThetaAngles]/D");	
+  treeAngles->Branch("TauSpinnerMixingAnglesString",&mystringso);
+  treeAngles->Fill();  	
+}
 
 DEFINE_FWK_MODULE(ICTauSpinnerProducer);
 
