@@ -70,8 +70,8 @@ process.source = cms.Source("PoolSource",
 #	"root://cms-xrd-global.cern.ch///store/user/aakhmets/gc_storage/MuTau_data_2017_CMSSW944_gridka/TauEmbedding_MuTau_data_2017_CMSSW944_Run2017F/99/merged_9998.root"
 #samples flat in polarisation:
 #ggH 2017 6000 evts:
-"root://cms-xrd-global.cern.ch///store/results/hightt/adow/GluGluHToPseudoscalarTauTau_M125_13TeV_powheg_pythia8_2017-GEN_TEST07Jan19/USER/StoreResults_GluGluToHToTauTauNoSpin_M125_13TeV_pythia8_2017_MINIAOD-v1/50000/FC662831-23BC-E911-8C30-D4AE526A0B29.root"
-
+#"root://cms-xrd-global.cern.ch///store/results/hightt/adow/GluGluHToPseudoscalarTauTau_M125_13TeV_powheg_pythia8_2017-GEN_TEST07Jan19/USER/StoreResults_GluGluToHToTauTauNoSpin_M125_13TeV_pythia8_2017_MINIAOD-v1/50000/FC662831-23BC-E911-8C30-D4AE526A0B29.root"
+"root://xrootd-cms.infn.it//store/results/hightt/adow/GluGluHToPseudoscalarTauTau_M125_13TeV_powheg_pythia8_2017-GEN_TEST07Jan19/USER/StoreResults_GluGluToHToTauTauNoSpin_M125_13TeV_pythia8_2017_MINIAOD-v1/50000/BA185D90-1ABC-E911-BF72-842B2B7680D5.root"
 	),
   skipEvents = cms.untracked.uint32(0),
   #lumisToProcess = LumiList.LumiList(filename = 'json/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt').getVLuminosityBlockRange()
@@ -637,7 +637,7 @@ process.triggerSelection = cms.EDFilter("HLTHighLevel",
 process.icTauSpinnerProducer = cms.EDProducer("ICTauSpinnerProducer",
   branch                  = cms.string("tauspinner"),
   input                   = cms.InputTag("prunedGenParticles"),
-  theta                   = cms.string("0,0.25,0.5,-0.25,0.375")
+  theta                   = cms.string("0,0.25,0.5,-0.25,0.375")#Comment: if specify more angles, FIRST addapt NrAnglestoStore in ICTauSpinnerProducer and recompile, currently the branch expects max 5 weights!
 )
 
 #process.icTauSpinnerSequence = cms.Sequence()
