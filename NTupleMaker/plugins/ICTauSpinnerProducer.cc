@@ -182,8 +182,7 @@ void ICTauSpinnerProducer::initialize(){
 
 void ICTauSpinnerProducer::produce(edm::Event& event,
                                   const edm::EventSetup& setup) {
-//test:
-cout<<"running ICTauSpinnerProducer"<<endl;
+//cout<<"running ICTauSpinnerProducer"<<endl;
 
   edm::Handle<edm::View<reco::GenParticle> > parts_handle;
   event.getByLabel(input_, parts_handle);
@@ -207,7 +206,7 @@ cout<<"running ICTauSpinnerProducer"<<endl;
   for(unsigned i=0; i<tau1_daughters.size(); ++i) simple_tau1_daughters.push_back(ConvertToSimplePart(tau1_daughters[i]));
   for(unsigned i=0; i<tau2_daughters.size(); ++i) simple_tau2_daughters.push_back(ConvertToSimplePart(tau2_daughters[i]));
  
-  WeightsPtr=new double[theta_vec_.size()];
+ // WeightsPtr=new double[theta_vec_.size()];
 
   for(unsigned i=0; i<theta_vec_.size(); ++i){
     double theta_val_ = theta_vec_[i].second;
@@ -216,10 +215,11 @@ cout<<"running ICTauSpinnerProducer"<<endl;
     TauSpinner::setHiggsParametersTR(-cos(2*M_PI*theta_val_),cos(2*M_PI*theta_val_),-sin(2*M_PI*theta_val_),-sin(2*M_PI*theta_val_));
     double weight_ = TauSpinner::calculateWeightFromParticlesH(simple_boson,simple_tau1,simple_tau2,simple_tau1_daughters,simple_tau2_daughters); 
   //  info_->set_weight(weight_name_,weight_,false);
-    cout<<"weight_name "<<weight_name_ <<" weight "<<weight_ <<endl;
+   
+// cout<<"weight_name "<<weight_name_ <<" weight "<<weight_ <<endl;
     WeightsPtr[i]=weight_;	
+  //  cout<<"WeightsPtr[i] "<<WeightsPtr[i]<<endl;
   }
-
 
 
  tree->Fill();
@@ -233,7 +233,7 @@ void ICTauSpinnerProducer::beginJob() {
 //Merijn: try to connect to our output file
   edm::Service<TFileService> FS;
   tree = FS->make<TTree>("TauSpinnerWeightTree","TauSpinnerWeightTree", 1); //works, but goes in icTauSpinner directory..
-  tree->SetMaxVirtualSize(300000000);
+  //tree->SetMaxVirtualSize(300000000);
 
 //playground Merijn
 //  std::string ntupleName("makeroottree/AC1B"); this doesn work..

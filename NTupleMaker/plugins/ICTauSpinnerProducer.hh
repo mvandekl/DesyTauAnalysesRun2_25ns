@@ -21,6 +21,7 @@
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "TTree.h"
 //#include "DesyTauAnalyses/NTupleMaker/plugins/NTupleMaker.h" currently will generate an issue with multiple definitions 
+#define NrAnglestoStore   5
 
 enum pdgId {
   Gamma = 22,
@@ -80,7 +81,7 @@ class ICTauSpinnerProducer : public edm::EDProducer {
   TTree* treeAngles;//this we'll fill only once!
   TH1D*  nEvents;//for test purpose..
   int NThetaAngles;
-  double * WeightsPtr;
+  double WeightsPtr[NrAnglestoStore];//in case we like to store 10 angles
 
 
 };
