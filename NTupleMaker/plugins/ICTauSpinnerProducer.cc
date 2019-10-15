@@ -233,7 +233,7 @@ void ICTauSpinnerProducer::beginJob() {
 //Merijn: try to connect to our output file
   edm::Service<TFileService> FS;
   tree = FS->make<TTree>("TauSpinnerWeightTree","TauSpinnerWeightTree", 1); //works, but goes in icTauSpinner directory..
-  //tree->SetMaxVirtualSize(300000000);
+  tree->SetMaxVirtualSize(300000000);
 
 //playground Merijn
 //  std::string ntupleName("makeroottree/AC1B"); this doesn work..
@@ -249,6 +249,7 @@ void ICTauSpinnerProducer::beginJob() {
 }
 
 void ICTauSpinnerProducer::endJob(){
+cout<<"start ICTauSpinnerProducer::endJob "<<endl;
   edm::Service<TFileService> FS;
   //Merijn: use this function to ONCE store the angle names and values
   treeAngles=FS->make<TTree>("TauSpinnerAngleTree", "TauSpinnerAngleTree", 1);
@@ -265,6 +266,7 @@ void ICTauSpinnerProducer::endJob(){
   treeAngles->Branch("TauSpinnerMixingAngles", AnglePtr, "AnglePtr[NThetaAngles]/D");	
   treeAngles->Branch("TauSpinnerMixingAnglesString",&mystringso);
   treeAngles->Fill();  	
+  cout<<"end ICTauSpinnerProducer::endJob "<<endl;
 }
 
 DEFINE_FWK_MODULE(ICTauSpinnerProducer);

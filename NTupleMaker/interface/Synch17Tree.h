@@ -14,6 +14,12 @@
 
 // Header file for the classes stored in the TTree if any.
 
+#define NrAnglestoStore   5
+#include <vector>
+#include <string>
+
+using namespace std;
+
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
 class Synch17Tree {
@@ -320,6 +326,13 @@ public :
   Float_t VzConstitTau2;
   Float_t alphaminus;
 
+//for tauspinner weights
+  int NThetaAngles=NrAnglestoStore;
+  double WeightsPtr[NrAnglestoStore];//in case we like to store 10 angles
+  //double AnglePtrAnglePtr[NrAnglestoStore];	
+  //std::vector<string> mystringso;
+  double TauSpinnerWeightsEven, TauSpinnerWeightsOdd, TauSpinnerWeightsMaxMix, TauSpinnerWeightsMinusMaxMix, TauSpinnerWeightsMix0p375;
+
 
   //////////////////////////////////////////////
   //            List of branches              //
@@ -623,6 +636,16 @@ public :
   TBranch        *b_VzConstitTau2;
   TBranch        *b_alphaminus;
 
+//branches for tauspinner:
+  TBranch        *b_NThetaAngles; 
+  TBranch        *b_TauSpinnerMixingAngles;
+  TBranch        *b_TauSpinnerMixingAnglesString;
+  TBranch        *b_TauSpinnerWeights;
+  TBranch        *b_TauSpinnerWeightsEven;
+  TBranch        *b_TauSpinnerWeightsOdd;
+  TBranch        *b_TauSpinnerWeightsMaxMix;
+  TBranch        *b_TauSpinnerWeightsMinusMaxMix;
+  TBranch        *b_TauSpinnerWeightsMix0p375;
 
   Synch17Tree(TTree *tree=0);
   virtual ~Synch17Tree();

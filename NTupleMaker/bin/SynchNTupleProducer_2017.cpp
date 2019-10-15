@@ -58,6 +58,10 @@
 #include "DesyTauAnalyses/NTupleMaker/interface/functionsCP.h"
 #include "HTT-utilities/TauTriggerSFs2017/interface/TauTriggerSFs2017.h"
 
+#include "Compression.h"
+
+#define expectedtauspinnerweights 5
+
 #define pi 	3.14159265358979312
 #define d2r 1.74532925199432955e-02
 #define r2d 57.2957795130823229
@@ -409,6 +413,10 @@ int main(int argc, char * argv[]){
   TString rootFileName(sample);
   std::string ntupleName("makeroottree/AC1B");
 
+  //Merijn add names for spinner trees
+  std::string TauSpinnerWeightTreeName("icTauSpinnerProducer/TauSpinnerWeightTree");
+  std::string TauSpinnerAngleTreeName("icTauSpinnerProducer/TauSpinnerAngleTree");
+
   // PU reweighting - initialization
   PileUp * PUofficial = new PileUp();
   if(ApplyPUweight){
@@ -480,6 +488,9 @@ int main(int argc, char * argv[]){
   std::cout <<rootFileName <<std::endl;  
 
   TFile * file = new TFile( rootFileName ,"recreate");
+  file->SetCompressionAlgorithm(ROOT::kLZMA);
+  file->SetCompressionLevel(9);
+ 
   file->cd("");
 
   TH1D * inputEventsH = new TH1D("inputEventsH","",1,-0.5,0.5);
@@ -500,6 +511,8 @@ int main(int argc, char * argv[]){
   
   Synch17GenTree *gentree = new Synch17GenTree(gtree);
   Synch17GenTree *gentreeForGoodRecoEvtsOnly = new Synch17GenTree(tree);
+
+    TTree * TauSpinnerAngleInfo = new TTree("TauSpinnerAngleInfo","TauSpinnerAngleInfo");//will contain only the N angles and their names. Only written if tauspinner events present. Will allow for an easy cross check later, if tree present or not.
     
 
   int nTotalFiles = 0;
@@ -614,7 +627,33 @@ int main(int argc, char * argv[]){
     
     TTree * _tree = NULL;
     _tree = (TTree*)file_->Get(TString(ntupleName));
-        
+
+
+    //Merijn: declare some branches, and  weights with default values. attach them in the gen and reco tree. Below in event loop intialise
+    double * TSweight=new double();//[expectedtauspinnerweights];//should be adjusted to size vector
+    double * TSAngle=new double[expectedtauspinnerweights];//should be adjusted to size vector
+    string * TSAngleString=new string[expectedtauspinnerweights];//should be adjusted to size vector
+
+/*
+    TSweight[0]=1;
+    TSweight[1]=2;
+    TSweight[2]=3;
+    TSweight[3]=4;TauSpinnerWeightTreeName
+    TSweight[4]=5;*/
+
+
+    TTree * _treeTauSpinnerWeights = NULL;
+    TTree * _treeTauSpinnerAngles = NULL;
+
+    _treeTauSpinnerWeights = (TTree*)file_->Get(TString(TauSpinnerWeightTreeName));
+    _treeTauSpinnerWeights->ls();
+    _treeTauSpinnerAngles = (TTree*)file_->Get(TString(TauSpinnerAngleTreeName));
+    //declare branch
+    _treeTauSpinnerWeights->SetBranchAddress("TauSpinnerWeights",TSweight);		
+    //read in the angles and strings
+
+ 
+   
     if (_tree==NULL) continue;
     
     TH1D * histoInputEvents = NULL;
@@ -646,6 +685,79 @@ int main(int argc, char * argv[]){
 //for (Long64_t iEntry=0; iEntry<1000; iEntry++) {
 for (Long64_t iEntry=0; iEntry<numberOfEntries; iEntry++) {
   // cout<<"iEntry "<<iEntry<<endl;
+//if trees are defined, put to the value,otherwise..  put to 1
+
+    _treeTauSpinnerWeights->ls();
+     cout<<"before get entry"<<endl;
+     _treeTauSpinnerWeights->GetEntry(iEntry);
+
+     cout<<"before setting tauspinner"<<endl;
+
+	for(int tsitindex=0;tsitindex<5;tsitindex++){
+	cout<<"i "<<tsitindex<<" TSweight[0][tsitindex] "<<TSweight[tsitindex] <<endl;
+	   gentree->WeightsPtr[tsitindex]=TSweight[tsitindex];
+	   gentreeForGoodRecoEvtsOnly->WeightsPtr[tsitindex]=TSweight[tsitindex];
+	   otree->WeightsPtr[tsitindex]=TSweight[tsitindex];	   
+	}     
+
+	otree->TauSpinnerWeightsEven=TSweight[0];
+	gentree->TauSpinnerWeightsEven=TSweight[0];
+	gentreeForGoodRecoEvtsOnly->TauSpinnerWeightsEven=TSweight[0];
+
+	otree->TauSpinnerWeightsMaxMix=TSweight[1];
+	gentree->TauSpinnerWeightsMaxMix=TSweight[1];
+	gentreeForGoodRecoEvtsOnly->TauSpinnerWeightsMaxMix=TSweight[1];
+
+	otree->TauSpinnerWeightsOdd=TSweight[2];
+	gentree->TauSpinnerWeightsOdd=TSweight[2];
+	gentreeForGoodRecoEvtsOnly->TauSpinnerWeightsOdd=TSweight[2];
+
+	otree->TauSpinnerWeightsMinusMaxMix=TSweight[3];
+	gentree->TauSpinnerWeightsMinusMaxMix=TSweight[3];
+	gentreeForGoodRecoEvtsOnly->TauSpinnerWeightsMinusMaxMix=TSweight[3];
+
+	otree->TauSpinnerWeightsMix0p375=TSweight[4];
+	gentree->TauSpinnerWeightsMix0p375=TSweight[4];
+	gentreeForGoodRecoEvtsOnly->TauSpinnerWeightsMix0p375=TSweight[4];
+
+
+  //here fill tree TauSpinnerAngleInfo, but do it only once..
+	/*
+if(iEntry==0){
+int NThetaAngles=5;
+  double * AnglePtr =new double[5];	
+  std::vector<string> mystringso;
+  vector<string> * kut = new vector<string>();
+
+  _treeTauSpinnerWeights->SetBranchAddress("String",&kut);
+  
+  _treeTauSpinnerWeights->GetEntry(0);
+cout<<"kut[0]" <<kut[0]<<endl;
+//cout<<"kut[0][0]" <<kut[0][0]<<endl;
+
+
+  for(unsigned i=0; i<5; ++i){
+//    AnglePtr[i] = theta_vec_[i].second;
+    mystringso.push_back(kut[0][i]);    
+cout<<"mystringso[i] "<<mystringso[i]<<endl;
+  }
+		
+  TauSpinnerAngleInfo->Branch("NThetaAngles", &NThetaAngles, "NThetaAngles/i"); //needed to set properly
+  TauSpinnerAngleInfo->Branch("TauSpinnerMixingAngles", AnglePtr, "AnglePtr[NThetaAngles]/D");	
+  TauSpinnerAngleInfo->Branch("TauSpinnerMixingAnglesString",&mystringso);
+  TauSpinnerAngleInfo->Fill();  	
+}
+
+*/
+     cout<<"after setting tauspinner"<<endl;
+
+/*
+     gentree->WeightsPtr[0]=TSweight[0];
+     gentree->WeightsPtr[1]=TSweight[1];
+     gentree->WeightsPtr[2]=TSweight[2];
+     gentree->WeightsPtr[3]=TSweight[3];
+     gentree->WeightsPtr[4]=TSweight[4];*/
+
       counter[0]++;
       analysisTree.GetEntry(iEntry);
       nEvents++;

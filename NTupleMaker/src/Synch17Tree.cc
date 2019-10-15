@@ -353,7 +353,18 @@ void Synch17Tree::ReadInit(TTree *tree)
    fChain->SetBranchAddress("VzConstitTau2", &VzConstitTau2, &b_VzConstitTau2);
    fChain->SetBranchAddress("alphaminus", &alphaminus, &b_alphaminus);
 
+//tauspinner weights:
+   fChain->SetBranchAddress("NThetaAngles", &NThetaAngles, &b_NThetaAngles);
+ //  fChain->SetBranchAddress("TauSpinnerMixingAngles", &AnglePtr, &b_TauSpinnerMixingAngles);
+  // fChain->SetBranchAddress("TauSpinnerMixingAnglesString",&mystringso,&b_TauSpinnerMixingAnglesString);
+   fChain->SetBranchAddress("TauSpinnerWeights", &WeightsPtr, &b_TauSpinnerWeights);
 
+   fChain->SetBranchAddress("TauSpinnerWeightsEven", &TauSpinnerWeightsEven, &b_TauSpinnerWeightsEven);
+   fChain->SetBranchAddress("TauSpinnerWeightsOdd", &TauSpinnerWeightsOdd, &b_TauSpinnerWeightsOdd);
+   fChain->SetBranchAddress("TauSpinnerWeightsMaxMix", &TauSpinnerWeightsMaxMix, &b_TauSpinnerWeightsMaxMix);
+   fChain->SetBranchAddress("TauSpinnerWeightsMinusMaxMix", &TauSpinnerWeightsMinusMaxMix, &b_TauSpinnerWeightsMinusMaxMix);
+   fChain->SetBranchAddress("TauSpinnerWeightsMix0p375", &TauSpinnerWeightsMix0p375, &b_TauSpinnerWeightsMix0p375);
+   
    lock=true;
 }
 
@@ -719,6 +730,16 @@ void Synch17Tree::WriteInit(TTree *tree) {
    fChain->Branch("VzConstitTau2", &VzConstitTau2, "VzConstitTau2/F");
    fChain->Branch("alphaminus", &alphaminus, "alphaminus/F");
 
+  fChain->Branch("NThetaAngles", &NThetaAngles, "NThetaAngles/i");
+  fChain->Branch("TauSpinnerWeights", WeightsPtr, "WeightsPtr[NThetaAngles]/D");
+ // fChain->Branch("TauSpinnerMixingAngles", AnglePtr, "AnglePtr[NThetaAngles]/D");	
+ // fChain->Branch("TauSpinnerMixingAnglesString",&mystringso);
+
+  fChain->Branch("TauSpinnerWeightsEven", &TauSpinnerWeightsEven, "TauSpinnerWeightsEven/D");
+  fChain->Branch("TauSpinnerWeightsOdd", &TauSpinnerWeightsOdd, "TauSpinnerWeightsOdd/D");
+  fChain->Branch("TauSpinnerWeightsMaxMix", &TauSpinnerWeightsMaxMix, "TauSpinnerWeightsMaxMix/D");
+  fChain->Branch("TauSpinnerWeightsMinusMaxMix", &TauSpinnerWeightsMinusMaxMix, "TauSpinnerWeightsMinusMaxMix/D");
+  fChain->Branch("TauSpinnerWeightsMix0p375", &TauSpinnerWeightsMix0p375, "TauSpinnerWeightsMix0p375/D");
    
 }
 
